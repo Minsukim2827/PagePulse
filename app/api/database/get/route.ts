@@ -1,18 +1,9 @@
 import { NextResponse } from 'next/server';
-import { Client } from 'pg';
+import {getClient} from "@/scripts/db"
 
 export async function GET() {
     // Create a new client instance
-    const client = new Client({
-        user: process.env.POSTGRES_USER,
-        host: process.env.POSTGRES_HOST,
-        database: process.env.POSTGRES_NAME,
-        password: process.env.POSTGRES_PASSWORD,
-        port: parseInt(process.env.POSTGRES_PORT!),
-        ssl: {
-            rejectUnauthorized: false 
-        }
-    });
+    const client = await getClient();
 
     try {
 
