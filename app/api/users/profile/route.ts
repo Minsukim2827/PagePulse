@@ -1,0 +1,16 @@
+import { getJWTPayload } from "@/scripts/auth";
+import { sql } from "@/scripts/db";
+import { NextResponse } from "next/server";
+
+export async function GET(request: Request) {
+  //getting current users credentials
+  const jwtPayload = await getJWTPayload();
+
+  const res = await sql(
+    "select id, username, avatar from users where id = $1",
+    [jwtPayload.sub]
+  );
+  const user = res.rows[0];
+
+  return NextResponse.json({ data: user });
+}
