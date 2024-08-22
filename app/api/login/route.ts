@@ -12,9 +12,7 @@ export async function POST(request: Request) {
         }
 
     const user = res.rows[0];
-    console.log("checking user: ", user)
     const match = await bcrypt.compare(json.password, user.password);
-    console.log("checking match: ", match)
     if (!match) {
         return NextResponse.json({error: "Invalid password"}, {status: 401});
     }
@@ -23,7 +21,7 @@ export async function POST(request: Request) {
         .setSubject(user.id)
         .setIssuedAt()
         .setExpirationTime("2w")
-        .sign(new TextEncoder().encode("my-jwt-secret"));
+        .sign(new TextEncoder().encode(process.env.JWT_SECRET!));
         const response = NextResponse.json({msg: "login success"});
         response.cookies.set("jwt-token", token, {
             sameSite: "strict",
