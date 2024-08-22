@@ -1,10 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
-interface UserI {
-    username: string;
-    avatar?: string;  
-  }
+
+
 
 function User({ user, href }: { user: UserI; href?: string }) {
   return (
@@ -17,15 +15,15 @@ function User({ user, href }: { user: UserI; href?: string }) {
           {user.avatar && (
             <Image
               src={user.avatar}
-              width={50}
-              height={50}
+              width={40}
+              height={40}
               alt={user.username}
               className="rounded-full mr-3"
             />
           )}
           {!user.avatar && (
             <div
-              style={{ width: 50, height: 50 }}
+              style={{ width: 40, height: 40 }}
               className="bg-slate-600 rounded-full mr-3"
             ></div>
           )}

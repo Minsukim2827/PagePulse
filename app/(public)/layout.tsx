@@ -1,7 +1,13 @@
+"use client"
+import Navbar from './navbar';
+
 export default function PublicLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    return <main>{children}</main>;
+    return <main>
+        <Navbar />
+        {children}
+        </main>;
 }

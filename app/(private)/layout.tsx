@@ -1,6 +1,5 @@
 "use client"
-import Navbar from "@/components/navbar";
-import Header from "./header";
+import Navbar from "./navbar";
 import Footer from "./footer";
 import {SWRConfig} from "swr";
 import fetcher from "@/app/scripts/fetcher";
@@ -14,7 +13,7 @@ export default function PrivateLayout({
         <SWRConfig
         value={{fetcher:fetcher}}>
     <div>
-        <Header />
+
         <Navbar />
 
         <main>
