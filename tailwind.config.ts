@@ -18,6 +18,9 @@ const config = {
       },
     },
     extend: {
+      fontSize: {
+        '2xl': '1.5rem', 
+      },
       colors: {
         brown: {
           600: '#A52A2A' 

@@ -1,5 +1,7 @@
 import Link from 'next/link';
 
+import DbButton from '../components/DbButton';
+
 export default function Home() {
 
   return (
@@ -8,6 +10,7 @@ export default function Home() {
       <div className="text-center my-4">PagePulse</div>
       <div>
         Welcome to PagePulse
+        <DbButton />
       </div>
       </div>
     </main>
