@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import {sql} from "@/scripts/db";
+import {sql} from "@/app/scripts/db";
 import bcrypt from "bcrypt";
 import { SignJWT } from "jose";
 

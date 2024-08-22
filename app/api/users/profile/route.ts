@@ -1,5 +1,5 @@
-import { getJWTPayload } from "@/scripts/auth";
-import { sql } from "@/scripts/db";
+import { getJWTPayload } from "@/app/scripts/auth";
+import { sql } from "@/app/scripts/db";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
@@ -11,6 +11,9 @@ export async function GET(request: Request) {
     [jwtPayload.sub]
   );
   const user = res.rows[0];
-
+  if (!user.avatar) {
+    user.avatar = '/avatar-default.png'; 
+  }
+  console.log(user);
   return NextResponse.json({ data: user });
 }

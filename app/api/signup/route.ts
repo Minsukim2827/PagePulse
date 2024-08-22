@@ -1,4 +1,4 @@
-import { sql } from "@/scripts/db";
+import { sql } from "@/app/scripts/db";
 import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
 
