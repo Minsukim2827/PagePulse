@@ -5,7 +5,9 @@ function DbButton() {
     // Function to fetch data from the server
     async function fetchData() {
         try {
-            const response = await fetch('/api/database');
+            const response = await fetch('/api/database/post/', {
+                method: 'POST',
+            });
             const data = await response.json();
             console.log(data);
         } catch (error) {
