@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import Header from "./header";
 
 const Navbar: React.FC = () => {
   return (
@@ -36,7 +35,16 @@ const Navbar: React.FC = () => {
         </Link>
       </div>
       <div className="flex items-center space-x-4">
-        <Header />
+        <Link href="/signup" passHref>
+          <Button variant="outline" className="text-xl">
+            Sign Up
+          </Button>
+        </Link>
+        <Link href="/signin" passHref>
+          <Button variant="destructive" className="text-xl">
+            Sign In
+          </Button>
+        </Link>
       </div>
     </nav>
   );
