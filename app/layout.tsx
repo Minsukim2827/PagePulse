@@ -14,12 +14,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        <div className="min-h-screen flex flex-col">
+      <body className="">
           <Navbar />
-          <main className="flex-grow">{children}</main>
+          <main className="flex flex-col min-h-screen max-w-md items-center justify-center m-auto p-20">{children}</main>
           <footer>all rights reserved @pagepulse</footer>
-        </div>
       </body>
     </html>
   );
