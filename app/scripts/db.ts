@@ -1,11 +1,19 @@
 import {Client, QueryResult} from "pg";
 import {loadEnvConfig} from "@next/env";
 
-
+const projectDir = process.cwd();
+loadEnvConfig(projectDir);
 
 export async function getClient(): Promise<Client> {
-    const projectDir = process.cwd();
-    loadEnvConfig(projectDir);
+    if (process.env.POSTGRES_URL) {
+        const client = new Client({
+          connectionString: process.env.POSTGRES_URL,
+          ssl: {
+            rejectUnauthorized: false,
+          },
+        });
+        return client;
+      }
 
     const client = new Client({
         user: process.env.POSTGRES_USER,
