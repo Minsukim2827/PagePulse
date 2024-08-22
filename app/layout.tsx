@@ -1,29 +1,26 @@
 import React from 'react';
-import Head from 'next/head';
 import Navbar from '../components/navbar';
 import './globals.css';
 
-type LayoutProps = {
-  children: React.ReactNode;
-  title?: string;
+export const metadata = {
+  title: 'PagePulse',
+  description: 'Your site description',
 };
 
-const RootLayout: React.FC<LayoutProps> = ({ children, title }) => {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <html>
-      <Head>
-        <title>{title || 'PagePulse'}</title>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      </Head>
+    <html lang="en">
       <body>
         <div className="min-h-screen flex flex-col">
           <Navbar />
           <main className="flex-grow">{children}</main>
-          <footer> all rights reserved @pagepulse</footer>
+          <footer>all rights reserved @pagepulse</footer>
         </div>
       </body>
     </html>
   );
-};
-
-export default RootLayout;
+}
