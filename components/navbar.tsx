@@ -3,11 +3,12 @@ import Link from "next/link";
 
 const Navbar: React.FC = () => {
   return (
-    <nav className="bg-grey shadow-md px-4 py-2 flex flex-row justify-between gap-10 items-center h-auto fixed top-0 left-0 right-0 z-10">
+    <nav className="bg-theme_tomato shadow-md px-4 py-5 flex flex-row justify-between gap-10 items-center h-auto mb-10">
+      <div></div>
       <div className="flex items-center space-x-4">
         <Link href="/" passHref>
           <span className="font-bold text-xl">
-            <span className="text-brown-600 text-2xl">Page</span>
+            <span className="text-white text-2xl">Page</span>
             <span className="text-red-600 text-2xl">Pulse</span>
           </span>
         </Link>
@@ -18,19 +19,14 @@ const Navbar: React.FC = () => {
             Feed
           </Button>
         </Link>
-        <Link href="/profile" passHref>
+        <Link href="/discovery" passHref>
           <Button variant="link" className="text-xl">
-            Profile
+            Discovery
           </Button>
         </Link>
-        <Link href="/following" passHref>
+        <Link href="/playlists" passHref>
           <Button variant="link" className="text-xl">
-            Following
-          </Button>
-        </Link>
-        <Link href="/followers" passHref>
-          <Button variant="link" className="text-xl">
-            Followers
+            Playlists
           </Button>
         </Link>
       </div>
@@ -46,6 +42,7 @@ const Navbar: React.FC = () => {
           </Button>
         </Link>
       </div>
+      <div></div>
     </nav>
   );
 };
