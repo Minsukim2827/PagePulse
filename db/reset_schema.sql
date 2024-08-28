@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS playlists (
     likes INTEGER DEFAULT 0,
     dislikes INTEGER DEFAULT 0,
     views BIGINT DEFAULT 0,
-    followers INTEGER[] DEFAULT '{}',
+    followers VARCHAR(16)[] DEFAULT '{}',
     follower_count INTEGER GENERATED ALWAYS AS (array_length(followers, 1)) STORED,
     created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
