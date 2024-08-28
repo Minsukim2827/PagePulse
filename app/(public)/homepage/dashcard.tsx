@@ -26,7 +26,7 @@ const DashCard: React.FC = () => {
         <Link href="/signup" passHref>
           <Button variant="default" className="pt-10 pb-10 rounded-full font-bold text-4xl bg-theme5 text-white">
             Join Now &nbsp;
-            <span className="flex items-center justify-center w-12 h-12 p-2 rounded-full border-4 border-white">></span>
+            <span className="flex items-center justify-center w-12 h-12 p-2 rounded-full border-4 border-white">&gt;</span>
           </Button>
         </Link>
       </div>
