@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(16) UNIQUE NOT NULL,
     password TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
     avatar TEXT,
     is_admin BOOLEAN DEFAULT false,
     created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
