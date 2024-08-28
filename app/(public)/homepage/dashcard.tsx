@@ -1,26 +1,34 @@
 import React from 'react';
 import Link from 'next/link';
+import cardContents from './cardContents';
+import { Book } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+
 const DashCard: React.FC = () => {
   return (
-    <div className="bg-theme2 border-4 border-black flex flex-col items-center p-4 w-auto h-auto rounded-2xl">
-      <h1 className="text-white text-2xl font-bold mb-2">Dashboard</h1>
-      <h2 className=" text-theme10 text-xl mb-4">Overview</h2>
-      
-      <div className="border-4 border-black grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 w-full">
-      {Array.from({ length: 4 }).map((_, index) => (
-          <div key={index} className="border-4 border-black p-4 grid grid-cols-2 grid-rows-2 gap-2">
-
-            <div className="col-span-1 row-span-2 bg-gray-100 p-2">Right {index + 1}</div>
-            <div className="row-span-2 flex flex-col justify-between">
-              <div className="bg-gray-200 p-2">Left Top {index + 1}</div>
-              <div className="bg-gray-200 p-2">Left Bottom {index + 1}</div>
+    <div className="bg-theme2 border-4 border-black flex flex-col items-center p-20 w-auto h-auto rounded-2xl relative gap-8">
+      <h1 className="text-white text-5xl font-bold mb-2">The next-generation book platform</h1>
+      <h2 className="font-bold text-theme10 text-3xl mb-4">Track, share and discover your favourite books.</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-10 w-full pt-6 pb-6">
+        {cardContents.map((card, index) => (
+          <div key={index} className="p-4 flex gap-10 items-center">
+            <div className="col-span-1 row-span-2 text-theme10 p-2">
+              <Book size={80} />
+            </div>
+            <div className="row-span-2 flex flex-col justify-between w-80">
+              <div className="text-2xl font-bold p-2 text-white">{card.top}</div>
+              <div className="text-xl font-bold p-2 text-theme10">{card.bottom}</div>
             </div>
           </div>
         ))}
       </div>
-      <div>
-<Link href="/signup" passHref>
-</Link>
+      <div className="absolute bottom-0 left-1/2 " style={{ transform: 'translate(-50%, calc(50%))' }}>
+        <Link href="/signup" passHref>
+          <Button variant="default" className="pt-10 pb-10 rounded-full font-bold text-4xl bg-theme5 text-white">
+            Join Now &nbsp;
+            <span className="flex items-center justify-center w-12 h-12 p-2 rounded-full border-4 border-white">></span>
+          </Button>
+        </Link>
       </div>
     </div>
   );

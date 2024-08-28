@@ -18,6 +18,19 @@ const config = {
       },
     },
     extend: {
+      width: {
+        p1: "100px",
+        p2: "200px",
+        p3: "300px",
+        p4: "400px",
+        p5: "500px",
+        p6: "600px",
+        p7: "700px",
+        p8: "800px",
+        p9: "900px",
+        p10: "1000px",
+        p11: "1100px",
+      },
       colors: {
         theme1: {
           DEFAULT: "#03071e",
