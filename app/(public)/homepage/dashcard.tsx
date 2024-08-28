@@ -8,10 +8,10 @@ import FetchUsersButton from './FetchUsersButton';
 
 const DashCard: React.FC = () => {
   return (
-    <div className="bg-theme2 border-4 border-black flex flex-col items-center p-20 w-auto h-auto rounded-2xl relative gap-6">
+    <div className="bg-theme2 border-4 border-black flex flex-col items-center p-16 w-auto h-auto rounded-2xl relative gap-6">
       <h1 className="text-white text-5xl font-bold mb-2">The next-generation book platform</h1>
       <h2 className="font-bold text-theme10 text-3xl mb-4">Track, share and discover your favourite books.</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 w-full pt-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 w-full ">
         {cardContents.map((card, index) => (
           <div key={index} className="p-4 flex gap-10 items-center">
             <div className="col-span-1 row-span-2 text-theme10 p-2">
