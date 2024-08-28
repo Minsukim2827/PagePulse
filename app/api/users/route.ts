@@ -1,10 +1,6 @@
-import { createClient } from '@supabase/supabase-js';
+// app/api/users/route.ts 
+import { supabase } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
-
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
-
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export async function GET() {
   const { data, error } = await supabase.from('users').select('*');
