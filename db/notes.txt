@@ -1,0 +1,47 @@
+user table:
+id (primary key) unique (this will increment with each new user)
+username unique not null (text of max 16 characters)
+passsword (text of max 26 characters) not null
+avatar (text)
+is_admin boolean default false
+created_at Timestamp default now(),
+updated_at timestamp default now(),
+
+posts table
+id unique (number that increments with each post) primary key
+user_id (references id from users table)
+content (text) not null
+created_at Timestamp default now(),
+updated_at timestamp default now(),
+
+follows table:
+user_id (not null references id from the users table)
+follower_id (not null references id from the users table)
+created_at Timestamp default now(),
+updated_at timestamp default now(),
+where user<id and follower_id are unique
+
+Playlists table:
+id unique (number that imcrements with each playlist) primary key
+user_id (references id from users table)
+username (references username from users table) not null
+title (text, max 50 characters) not null
+is_private (default false, boolean)
+likes (int) default is 0
+dislikes (int) default is 0
+views (bigint) default is 0
+created_at Timestamp default now(),
+updated_at timestamp default now(),
+followers (array of user id that are followers?) default is empty
+follower_count(length of followers array), default would be 0 right, or already calculated
+
+review table:
+
+id unique(number that imcrements with each review) primary key
+user_id( references id from users table)
+playlist_id( references id from playlists table)
+image (text, default is null)
+title (text max 50 chars) not null
+score (1 to 5) not null
+genres (array of genres) or default array entry value of unknown
+notes (text)
