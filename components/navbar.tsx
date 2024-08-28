@@ -2,6 +2,14 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { BookText } from 'lucide-react';
 import {ModeToggle} from "@/components/mode-toggle";
+import {
+  ClerkProvider,
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton
+} from '@clerk/nextjs'
+
 
 const Navbar: React.FC = () => {
   return (
@@ -31,19 +39,22 @@ const Navbar: React.FC = () => {
             Playlists
           </Button>
         </Link>
+        <Link href="/profile" passHref>
+          <Button variant="link" className="text-2xl text-white">
+            Profile
+          </Button>
+        </Link>
       </div>
       <div className="flex items-center space-x-4">
       <ModeToggle />
-        <Link href="/signup" passHref>
-          <Button variant="link" className="text-white text-2xl">
-            Sign Up
-          </Button>
-        </Link>
-        <Link href="/signin" passHref>
-          <Button variant="secondary" className="text-2xl bg-theme5 text-white">
-            Sign In
-          </Button>
-        </Link>
+      <div className="">
+      <SignedOut>
+            <SignInButton />
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+          </div>
       </div>
       <div>
         
