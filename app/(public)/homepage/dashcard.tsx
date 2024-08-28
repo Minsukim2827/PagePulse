@@ -1,8 +1,10 @@
+"use client"
 import React from 'react';
 import Link from 'next/link';
 import cardContents from './cardContents';
 import { Book } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import FetchUsersButton from './FetchUsersButton';
 
 const DashCard: React.FC = () => {
   return (
@@ -30,6 +32,7 @@ const DashCard: React.FC = () => {
           </Button>
         </Link>
       </div>
+      <div><FetchUsersButton /></div>
     </div>
   );
 };

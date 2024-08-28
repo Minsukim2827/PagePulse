@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS playlists (
     likes INTEGER DEFAULT 0,
     dislikes INTEGER DEFAULT 0,
     views BIGINT DEFAULT 0,
-    followers INTEGER[] DEFAULT '{}',
+    followers VARCHAR(16)[] DEFAULT '{}',
     follower_count INTEGER GENERATED ALWAYS AS (array_length(followers, 1)) STORED,
     created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
@@ -62,14 +62,3 @@ CREATE TABLE IF NOT EXISTS reviews (
     updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
 );
 
-CREATE TABLE user_session (
-    id TEXT PRIMARY KEY,
-    expires_at TIMESTAMPTZ NOT NULL,
-    user_id TEXT NOT NULL REFERENCES users(id)
-)
-
-CREATE TABLE IF NOT EXISTS user_session (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),  -- Generate a UUID as the session ID
-    expires_at TIMESTAMPTZ NOT NULL,
-    user_id INTEGER NOT NULL REFERENCES users(id)     -- Make sure user_id refers to the users table
-);
