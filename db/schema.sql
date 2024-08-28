@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(16) UNIQUE NOT NULL,
     password TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
     avatar TEXT,
     is_admin BOOLEAN DEFAULT false,
     created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
@@ -59,4 +60,16 @@ CREATE TABLE IF NOT EXISTS reviews (
     notes TEXT,
     created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
+);
+
+CREATE TABLE user_session (
+    id TEXT PRIMARY KEY,
+    expires_at TIMESTAMPTZ NOT NULL,
+    user_id TEXT NOT NULL REFERENCES users(id)
+)
+
+CREATE TABLE IF NOT EXISTS user_session (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),  -- Generate a UUID as the session ID
+    expires_at TIMESTAMPTZ NOT NULL,
+    user_id INTEGER NOT NULL REFERENCES users(id)     -- Make sure user_id refers to the users table
 );
