@@ -152,6 +152,9 @@ const config = {
           800: "#ffe39d",
           900: "#fff1ce",
         },
+        theme11: {
+          DEFAULT: "#fffaed"
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
