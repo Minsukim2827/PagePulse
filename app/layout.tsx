@@ -4,13 +4,6 @@ import { Nunito } from 'next/font/google'
 import Navbar from '@/components/navbar'
 import { ThemeProvider } from "@/components/theme-provider"
 import Footer from '@/components/footer'
-import {
-  ClerkProvider,
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton
-} from '@clerk/nextjs'
 
 const nunito = Nunito({ subsets: ['latin'] })
 
@@ -26,9 +19,9 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <ClerkProvider>
+    
     <html lang="en">
-      <body className={`${nunito.className}  min-h-screen flex flex-col`}>
+      <body className={`${nunito.className}  min-h-screen flex flex-col bg-theme10-900 dark:bg-theme1`}>
       <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -43,6 +36,6 @@ export default function RootLayout({
       </body>
       
     </html>
-    </ClerkProvider>
+   
   )
 }
