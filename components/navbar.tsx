@@ -2,7 +2,8 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { BookText } from 'lucide-react';
 import {ModeToggle} from "@/components/mode-toggle";
-
+import { ClerkProvider, SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
+import { Sign } from "crypto";
 
 const Navbar: React.FC = () => {
   return (
@@ -38,23 +39,33 @@ const Navbar: React.FC = () => {
           </Button>
         </Link>
       </div>
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-4 justify-center">
       <ModeToggle />
-      <Link href="/signup" passHref>
-      <Button variant="link" className="text-2xl text-white">
-            Signup
-          </Button>
-        </Link>
-        <Link href="/signin" passHref>
-          <Button variant="link" className="text-2xl text-white">
-            Signin
-          </Button>
+      <Link href="/sign-up" passHref>
+      <SignedOut>
+          <SignInButton>
+            <Button variant="link" className="text-2xl text-white">
+              Sign In
+              </Button>
+            </SignInButton>
+
+        </SignedOut>
+        <SignedIn>
+          <div className="flex justify-center items-center">
+          <UserButton appearance={{
+    elements: {
+      avatarBox: {
+        height: '50px', // Adjust height as needed
+        width: '50px'  // Adjust width as needed
+      }
+    }
+  }}/></div>
+          </SignedIn>
           </Link>
-      <div className="">
-          </div>
+
       </div>
       <div>
-        
+
       </div>
     </nav>
   );
