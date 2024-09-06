@@ -16,22 +16,23 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
+              
       <html lang="en">
-        <body className={`${nunito.className} min-h-screen flex flex-col bg-theme10-900 dark:bg-theme1`}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
+      
+      <body className={`${nunito.className} max-w-p13 flex flex-col m-auto dark:bg-gradient-to-b dark:from-zinc-950 dark:to-zinc-900`}>
+        <ThemeProvider defaultTheme="dark" attribute="class">
 <AnimateWrapper>
               <Navbar />
               {children}
             </AnimateWrapper>
             {/* <Footer /> */}
-          </ThemeProvider>
+            </ThemeProvider>
         </body>
+        
       </html>
+      
+    
+    
     </ClerkProvider>
   )
 }

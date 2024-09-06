@@ -5,6 +5,7 @@ const isProtectedRoute = createRouteMatcher([
     '/feed',
     '/profile',
     '/playlists',
+    '/success',
     ])
 
 export default clerkMiddleware((auth, req) => {

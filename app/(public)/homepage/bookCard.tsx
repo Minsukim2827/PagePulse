@@ -17,7 +17,7 @@ interface BookCardProps {
 
 const BookCard: React.FC<BookCardProps> = ({ link, img, title, author }) => {
   return (
-<div className="w-full max-w-sm mx-auto rounded-3xl">
+<div className="w-full mx-auto rounded-3xl">
   <Card>
     <CardHeader>
       <CardTitle>{title}</CardTitle>
