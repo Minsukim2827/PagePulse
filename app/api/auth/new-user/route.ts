@@ -12,6 +12,7 @@ export async function GET() {
 
   // Extract the Clerk ID from the user object
   const clerkId = user.id;
+  const un = user.username;
 
   // Check if the user already exists in the Supabase database
   const { data: existingUser, error } = await supabase
@@ -35,6 +36,7 @@ export async function GET() {
     .from('users')
     .insert([
       {
+        username: un,
         clerk_id: clerkId,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
