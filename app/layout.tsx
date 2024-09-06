@@ -25,7 +25,7 @@ export default function RootLayout({
               
       <html lang="en">
       
-      <body className={`${inter.className} flex flex-col bg-gray-200 dark:bg-gradient-to-b dark:from-zinc-950 dark:to-zinc-900`}>
+      <body className={`${inter.className} flex flex-col bg-gray-200 dark:bg-gradient-to-b dark:from-zinc-950 dark:to-zinc-900 max-w-13`}>
         <ThemeProvider defaultTheme="dark" attribute="class">
 <AnimateWrapper>
               <Navbar />

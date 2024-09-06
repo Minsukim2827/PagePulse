@@ -1,58 +1,51 @@
 import { NextResponse } from 'next/server';
-import { currentUser, auth } from '@clerk/nextjs';
+import { currentUser } from '@clerk/nextjs/server';
 import { supabase } from '@/lib/supabase';
 
 export async function GET() {
-  const { userId } = auth();
-  if (!userId) {
-    return new NextResponse('Unauthorized', { status: 401 });
-  }
-
+  // Get the current user from Clerk
   const user = await currentUser();
+
   if (!user) {
-    return new NextResponse('User not exist', { status: 404 });
+    return NextResponse.json({ error: 'User not authenticated' }, { status: 401 });
   }
 
-  try {
-    // Check if user exists in the database using Supabase
-    const { data: dbUser, error: fetchError } = await supabase
-      .from('users')
-      .select('*')
-      .eq('clerkId', user.id)
-      .single();
+  // Extract the Clerk ID from the user object
+  const clerkId = user.id;
 
-    if (fetchError) throw fetchError;
+  // Check if the user already exists in the Supabase database
+  const { data: existingUser, error } = await supabase
+    .from('users')
+    .select('*')
+    .eq('clerk_id', clerkId)
+    .single();
 
-    if (!dbUser) {
-      // Insert new user if not found
-      const { data: newUser, error: insertError } = await supabase
-        .from('users')
-        .insert([{
-          clerkId: user.id,
-          name: user.firstName ?? '',
-          lastName: user.lastName ?? '',
-          email: user.emailAddresses[0]?.emailAddress ?? '',
-        }])
-        .single();
+  if (error && error.code !== 'PGRST116') { // PGRST116 is the code for "No rows found"
+    console.error('Error checking user in Supabase:', error);
+    return NextResponse.json({ error: 'Error checking user in database' }, { status: 500 });
+  }
 
-      if (insertError) throw insertError;
-      return new NextResponse(null, {
-        status: 302,
-        headers: {
-          Location: '/success',
-        },
-      });
-    }
+  if (existingUser) {
+    // User already exists, return a success message
+    return NextResponse.json({ message: 'User already exists' });
+  }
 
-    // Redirect to dashboard after successful operations
-    return new NextResponse(null, {
-      status: 302,
-      headers: {
-        Location: '/success',
+  // If the user does not exist, insert a new user into the database
+  const { error: insertError } = await supabase
+    .from('users')
+    .insert([
+      {
+        clerk_id: clerkId,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       },
-    });
-  } catch (error) {
-    console.error('Database error:', error);
-    return new NextResponse('Internal Server Error', { status: 500 });
+    ]);
+
+  if (insertError) {
+    console.error('Error inserting user into Supabase:', insertError);
+    return NextResponse.json({ error: 'Error inserting user into database' }, { status: 500 });
   }
+
+  // Return a success message if the user was successfully created
+  return NextResponse.json({ message: 'User created successfully' });
 }

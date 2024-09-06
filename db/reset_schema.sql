@@ -9,11 +9,8 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- User Table
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
-    username VARCHAR(16) UNIQUE NOT NULL,
-    password TEXT NOT NULL,
-    email TEXT UNIQUE NOT NULL,
-    avatar TEXT,
-    is_admin BOOLEAN DEFAULT false,
+    clerkId TEXT UNIQUE, 
+    username VARCHAR(50) UNIQUE NOT NULL,
     created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
 );
@@ -40,13 +37,13 @@ CREATE TABLE IF NOT EXISTS follows (
 CREATE TABLE IF NOT EXISTS playlists (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id),
-    username VARCHAR(16) NOT NULL REFERENCES users(username),
+    username VARCHAR(50) NOT NULL REFERENCES users(username),
     title VARCHAR(50) NOT NULL,
     is_private BOOLEAN DEFAULT false,
     likes INTEGER DEFAULT 0,
     dislikes INTEGER DEFAULT 0,
     views BIGINT DEFAULT 0,
-    followers VARCHAR(16)[] DEFAULT '{}',
+    followers VARCHAR(50)[] DEFAULT '{}',
     follower_count INTEGER GENERATED ALWAYS AS (array_length(followers, 1)) STORED,
     created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()

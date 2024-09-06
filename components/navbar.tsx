@@ -5,8 +5,9 @@ import Link from "next/link";
 import { SquareUser, ListVideo, Telescope, Newspaper, BookText, Menu } from 'lucide-react';
 import { ModeToggle } from "@/components/mode-toggle";
 import { ClerkProvider, SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
-import NavButton from '@/components/ui/navButton/navButton'
-import {Button} from '@/components/ui/button'
+import NavButton from '@/components/ui/navButton/navButton';
+import { Button } from '@/components/ui/button';
+import { motion, AnimatePresence } from "framer-motion";
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -27,29 +28,26 @@ const Navbar: React.FC = () => {
       
       <div className="hidden xl:flex flex-grow justify-center items-center space-x-2">
         <Link href="/feed" passHref className="hidden lg:flex items-center justify-center flex-row">
-        
           <NavButton>
-          <Newspaper size={20} strokeWidth={1.5} className="text-lime-600 dark:text-lime-400"/>
+            <Newspaper size={20} strokeWidth={1.5} className="text-lime-600 dark:text-lime-400"/>
             Feed
           </NavButton>
         </Link>
         <Link href="/discovery" passHref className="hidden lg:flex items-center justify-center flex-row">
-        
           <NavButton>
-          <Telescope size={20} strokeWidth={1.5} className="text-yellow-600 dark:text-yellow-400"/>
+            <Telescope size={20} strokeWidth={1.5} className="text-yellow-600 dark:text-yellow-400"/>
             Discovery
           </NavButton>
         </Link>
         <Link href="/playlists" passHref className="hidden lg:flex items-center justify-center flex-row">
-        
           <NavButton>
-          <ListVideo size={20} strokeWidth={1.5} className="text-red-600 dark:text-red-400"/>
+            <ListVideo size={20} strokeWidth={1.5} className="text-red-600 dark:text-red-400"/>
             Playlists
           </NavButton>
         </Link>
         <Link href="/profile" passHref className="hidden lg:flex items-center justify-center flex-row">
           <NavButton>
-          <SquareUser size={20} strokeWidth={1.5} className="text-cyan-600 dark:text-cyan-400"/>
+            <SquareUser size={20} strokeWidth={1.5} className="text-cyan-600 dark:text-cyan-400"/>
             Profile
           </NavButton>
         </Link>
@@ -59,9 +57,11 @@ const Navbar: React.FC = () => {
         <ModeToggle />
         <SignedOut>
           <SignInButton>
+            <Link href="/sign-in" passHref>
             <NavButton>
               Sign In
             </NavButton>
+            </Link>
           </SignInButton>
         </SignedOut>
         <SignedIn>
@@ -74,48 +74,62 @@ const Navbar: React.FC = () => {
             }
           }} />
         </SignedIn>
-
       </div>
+
       <button onClick={toggleMenu} className="xl:hidden text-white">
-          <Menu size={40} />
-        </button>
-      {isMenuOpen && (
-        <div className="xl:hidden absolute top-16 right-0 bg-theme2 shadow-md p-5 flex flex-col space-y-4 z-50">
-          <Link href="/feed" passHref>
-            <Button variant="link" className="text-xl text-white block">
-              Feed
-            </Button>
-          </Link>
-          <Link href="/discovery" passHref>
-            <Button variant="link" className="text-xl text-white block">
-              Discovery
-            </Button>
-          </Link>
-          <Link href="/playlists" passHref>
-            <Button variant="link" className="text-xl text-white block">
-              Playlists
-            </Button>
-          </Link>
-          <Link href="/profile" passHref>
-            <Button variant="link" className="text-xl text-white block">
-              Profile
-            </Button>
-          </Link>
-          <div className="flex flex-row justify-between items-center space-x-4">
-            <ModeToggle />
-            <SignedIn>
-              <UserButton appearance={{
-                elements: {
-                  avatarBox: {
-                    height: '50px',
-                    width: '50px'
+        <Menu size={40} />
+      </button>
+
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="xl:hidden absolute top-16 right-0 bg-gray-300 dark:bg-zinc-700 shadow-lg p-5 flex flex-col space-y-4 z-50 rounded-lg mr-2"
+            style={{ boxShadow: "0 4px 15px rgba(0, 0, 0, 0.5)" }} // Background shadow
+          >
+            <Link href="/feed" passHref className="flex items-center justify-center flex-row">
+              <NavButton>
+                <Newspaper size={20} strokeWidth={1.5} className="text-lime-600 dark:text-lime-400"/>
+                Feed
+              </NavButton>
+            </Link>
+            <Link href="/discovery" passHref className="flex items-center justify-center flex-row">
+              <NavButton>
+                <Telescope size={20} strokeWidth={1.5} className="text-yellow-600 dark:text-yellow-400"/>
+                Discovery
+              </NavButton>
+            </Link>
+            <Link href="/playlists" passHref className="flex items-center justify-center flex-row">
+              <NavButton>
+                <ListVideo size={20} strokeWidth={1.5} className="text-red-600 dark:text-red-400"/>
+                Playlists
+              </NavButton>
+            </Link>
+            <Link href="/profile" passHref className="flex items-center justify-center flex-row">
+              <NavButton>
+                <SquareUser size={20} strokeWidth={1.5} className="text-cyan-600 dark:text-cyan-400"/>
+                Profile
+              </NavButton>
+            </Link>
+            <div className="flex flex-row justify-between items-center space-x-4">
+              <ModeToggle />
+              <SignedIn>
+                <UserButton appearance={{
+                  elements: {
+                    avatarBox: {
+                      height: '50px',
+                      width: '50px'
+                    }
                   }
-                }
-              }} />
-            </SignedIn>
-          </div>
-        </div>
-      )}
+                }} />
+              </SignedIn>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 };
