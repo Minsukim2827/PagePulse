@@ -42,7 +42,7 @@ const Navbar: React.FC = () => {
         <Link href="/playlists" passHref className="hidden lg:flex items-center justify-center flex-row">
           <NavButton>
             <ListVideo size={20} strokeWidth={1.5} className="text-red-600 dark:text-red-400"/>
-            Playlists
+            My Lists
           </NavButton>
         </Link>
         <Link href="/profile" passHref className="hidden lg:flex items-center justify-center flex-row">
@@ -105,7 +105,7 @@ const Navbar: React.FC = () => {
             <Link href="/playlists" passHref className="flex items-center justify-center flex-row">
               <NavButton>
                 <ListVideo size={20} strokeWidth={1.5} className="text-red-600 dark:text-red-400"/>
-                Playlists
+                My Lists
               </NavButton>
             </Link>
             <Link href="/profile" passHref className="flex items-center justify-center flex-row">

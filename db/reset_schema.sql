@@ -21,7 +21,6 @@ CREATE TABLE IF NOT EXISTS posts (
     user_id INTEGER NOT NULL REFERENCES users(id),
     content TEXT NOT NULL,
     created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
 );
 
 -- Follows Table
@@ -29,8 +28,7 @@ CREATE TABLE IF NOT EXISTS follows (
     user_id INTEGER NOT NULL REFERENCES users(id),
     follower_id INTEGER NOT NULL REFERENCES users(id),
     created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
-    UNIQUE(user_id, follower_id)
+    PRIMARY KEY (user_id, follower_id)
 );
 
 -- Playlists Table
@@ -58,6 +56,8 @@ CREATE TABLE IF NOT EXISTS reviews (
     title VARCHAR(50) NOT NULL,
     score INTEGER CHECK (score >= 1 AND score <= 5),
     genres TEXT[] DEFAULT ARRAY['unknown'],
+    page_count INTEGER DEFAULT 0,
+    authors TEXT[] DEFAULT ARRAY['unknown'],
     notes TEXT,
     created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
