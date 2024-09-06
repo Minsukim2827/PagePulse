@@ -7,7 +7,7 @@ import HighlyRatedBooksGrid from './(public)/homepage/highly-rated-books-grid';
 export default function Home() {
     return (
       
-      <main className="flex justify-center">
+      <main className="flex justify-center max-w-p13 m-auto">
         <AnimateWrapper>
 <DashCard />
 <HighlyRatedBooksGrid />

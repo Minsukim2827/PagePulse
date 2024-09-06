@@ -1,13 +1,19 @@
 import AnimateWrapper from '@/components/AnimateWrapper';
 import './globals.css'
 import type { Metadata } from 'next'
-import { Nunito } from 'next/font/google'
+import { Poppins, Inter } from 'next/font/google'
 import Navbar from '@/components/navbar'
 import { ThemeProvider } from "@/components/theme-provider"
 import Footer from '@/components/footer'
 import { ClerkProvider } from '@clerk/nextjs'
 
-const nunito = Nunito({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'] })
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'], // Specify the weights you want to use
+  style: ['normal', 'italic'], // Specify the styles you want to use
+  display: 'swap', // Use the 'swap' display strategy for better performance
+});
 
 export default function RootLayout({
   children,
@@ -19,13 +25,13 @@ export default function RootLayout({
               
       <html lang="en">
       
-      <body className={`${nunito.className} max-w-p13 flex flex-col m-auto dark:bg-gradient-to-b dark:from-zinc-950 dark:to-zinc-900`}>
+      <body className={`${inter.className} flex flex-col bg-gray-200 dark:bg-gradient-to-b dark:from-zinc-950 dark:to-zinc-900`}>
         <ThemeProvider defaultTheme="dark" attribute="class">
 <AnimateWrapper>
               <Navbar />
               {children}
             </AnimateWrapper>
-            {/* <Footer /> */}
+            <Footer />
             </ThemeProvider>
         </body>
         
