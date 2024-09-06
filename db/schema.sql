@@ -5,8 +5,9 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- User Table
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
+    clerkId TEXT UNIQUE,
     username VARCHAR(16) UNIQUE NOT NULL,
-    password TEXT NOT NULL,
+    password TEXT,
     email TEXT UNIQUE NOT NULL,
     avatar TEXT,
     is_admin BOOLEAN DEFAULT false,

@@ -21,7 +21,7 @@ export function ModeToggle() {
   return (
     <motion.button
       type="button"
-      className={`inline-flex justify-center w-full rounded-full p-3 text-sm font-medium border shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${
+      className={`inline-flex justify-center rounded-full p-2 text-sm font-medium border shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${
         theme === "dark" ? "bg-black text-white border-white" : "bg-white text-black border-gray-300"
       }`}
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
@@ -30,11 +30,11 @@ export function ModeToggle() {
     >
       {theme === "dark" ? (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <Sun className="h-6 w-6 text-white" />
+          <Sun className="h-3 w-3 text-white" />
         </motion.div>
       ) : (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <Moon className="h-6 w-6 text-black" />
+          <Moon className="h-3 w-3 text-black" />
         </motion.div>
       )}
     </motion.button>

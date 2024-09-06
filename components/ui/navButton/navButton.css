@@ -1,0 +1,54 @@
+/* navButton.css */
+
+.box:before {
+    position: absolute;
+    content: '';
+    left: 0;
+    bottom: 0;
+    height: 4px;
+    width: 100%;
+    border-bottom: 4px solid transparent;
+    border-left: 4px solid transparent;
+    box-sizing: border-box;
+    transform: translateX(100%);
+  }
+  
+  .box:after {
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    border-top: 4px solid transparent;
+    border-right: 4px solid transparent;
+    box-sizing: border-box;
+    transform: translateX(-100%);
+  }
+  
+  .box:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); /* Default shadow color for light mode */
+  }
+  
+  .box:hover:before,
+  .box:hover:after {
+    border-color: #6d28d9; /* Animation color for both light and dark mode */
+    height: 100%;
+    transform: translateX(0);
+  }
+  
+  .box:hover:before {
+    transition: 0.05s transform linear, 0.1s height linear 0.1s;
+  }
+  
+  .box:hover:after {
+    transition: 0.05s transform linear, 0.1s height linear 0.1s;
+  }
+  
+  /* Dark mode styles */
+  @media (prefers-color-scheme: dark) {
+    .box:hover {
+      box-shadow: 0 5px 15px rgba(169, 169, 169, 0.5); /* Greyish shadow color for dark mode */
+    }
+  }
+  
