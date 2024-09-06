@@ -1,44 +1,32 @@
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-  } from "@/components/ui/card";
-import Image from "next/image";
-import Link from 'next/link'; // Import Link from Next.js
+"use client"; // Ensure this component is treated as a client component
 
-interface BookCardProps {
-  link: string;
-  img: string;
-  title: string;
-  author: string;
-}
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { BookCard1 } from "@/components/component/book-card1"; // Import the BookCard1 component
 
-const BookCard: React.FC<BookCardProps> = ({ link, img, title, author }) => {
+const BookCard = ({ link, title, author, img }) => {
   return (
-<div className="w-full mx-auto rounded-3xl">
-  <Card>
-    <CardHeader>
-      <CardTitle>{title}</CardTitle>
-      <CardDescription>{author}</CardDescription>
-    </CardHeader>
-    <CardContent>
-      <Link href={link} passHref>
-        <div className="relative h-60 md:h-80">
-          <Image
-            src={img}
-            alt={`Cover of the book: ${title}`}
-            layout="fill"
-            objectFit="cover"
-            className="rounded-lg"
-          />
-        </div>
-      </Link>
-    </CardContent>
-  </Card>
-</div>
+    <motion.div
+      whileHover={{
+        scale: 1.05, // Slightly expand the card on hover
+        boxShadow: "0 0 20px 10px rgba(192, 38, 211, 0.8)", // Glow effect with fuchsia-600 color
+      }}
+      whileTap={{
+        scale: 0.95, // Slightly shrink the card when clicked
+      }}
+      initial={{ boxShadow: "0 0 0 0 rgba(192, 38, 211, 0)" }} // No glow initially
+      animate={{ boxShadow: "0 0 0 0 rgba(192, 38, 211, 0)" }} // No glow when not hovered
+      transition={{ type: "spring", stiffness: 300, damping: 20 }} // Smooth spring animation
+      className="w-full mx-auto rounded-3xl"
+    >
+      <BookCard1
+        link={link}
+        title={title}
+        author={author}
+        img={img}
+      />
+    </motion.div>
   );
-}
+};
 
 export default BookCard;
