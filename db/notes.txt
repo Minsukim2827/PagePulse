@@ -45,3 +45,6 @@ title (text max 50 chars) not null
 score (1 to 5) not null
 genres (array of genres) or default array entry value of unknown
 notes (text)
+
+
+Each grid or list will display the book image (book.items[x]["volumeInfo"].imageLinks.thumbnail), book title(book.items[x]["volumeInfo"].title), authors(book.items[x]["volumeInfo"].authors (array)), with an expandable in both grid and list views which displays the id (items[x].id), publisher (items[x].volumeInfo.publisher), published date(books.items[x].volumeInfo.publishedDate, ISBN10(books.items[x].volumeInfo.industryIdentifiers[0].identifier), ISBN13(books.items[x].volumeInfo.industryIdentifiers[1].identifier), link (books.items[x].volumeInfo.infoLink) Make the ui look modern and sleek and include pagination if too many results to list on one page/component
