@@ -10,6 +10,7 @@ import { Switch } from "@/components/ui/switch"
 import { ThumbsUpIcon, ThumbsDownIcon, EyeIcon, UserIcon, CalendarIcon, LockIcon, StarIcon, PlusIcon, EditIcon, TrashIcon } from "lucide-react"
 import axios from '@/lib/axios';
 import { format} from 'date-fns';
+import Image from 'next/image';
 
 const Page: React.FC = () => {
   const [bookLists, setBookLists] = useState<any[]>([]);
@@ -269,7 +270,14 @@ const Page: React.FC = () => {
                       <AccordionItem key={book.id} value={book.id}>
                         <AccordionTrigger onClick={() => toggleBook(book.id)} className="hover:no-underline">
                           <div className="flex items-center space-x-4">
-                            <img src={book.image} alt={book.title} className="w-16 h-24 object-cover" />
+                          <Image 
+          src={book.image || "/placeholder-user.jpg"} 
+          alt={book.title} 
+          width={64} 
+          height={96} 
+          className="object-cover"
+          onError={(e) => { e.currentTarget.src = placeholderImage.src }} // Fallback if the image fails to load
+        />
                             <div>
                               <h3 className="font-semibold">{book.title}</h3>
                               <div className="flex items-center">
