@@ -30,32 +30,35 @@ const Page: React.FC = () => {
     return format(date, 'dd MM yyyy');
   };
 
-  useEffect(() => {
-    const fetchPlaylistsAndReviews = async () => {
-      try {
-        const response = await axios.get('/api/playlists/get-playlists');
-        const data = response.data;
+useEffect(() => {
+  const fetchPlaylistsAndReviews = async () => {
+    try {
+      const response = await axios.get('/api/playlists/get-playlists');
+      const data = response.data;
 
-        if (response.status === 200) {
-          const { playlists, reviews } = data;
-          
-          // Combine playlists and their corresponding reviews
-          const playlistsWithBooks = playlists.map((playlist: any) => ({
-            ...playlist,
-            books: reviews.filter((review: any) => review.playlist_id === playlist.id) || [],
-          }));
-          console.log(playlistsWithBooks);
-          setBookLists(playlistsWithBooks);
-        } else {
-          console.error(data.error);
-        }
-      } catch (error) {
-        console.error('Failed to fetch playlists and reviews:', error);
+      if (response.status === 200 && data) {
+        const playlists = data.playlists || [];
+        const reviews = data.reviews || [];
+
+        // Combine playlists and their corresponding reviews
+        const playlistsWithBooks = playlists.map((playlist: any) => ({
+          ...playlist,
+          books: reviews.filter((review: any) => review.playlist_id === playlist.id) || [],
+        }));
+
+        console.log(playlistsWithBooks);
+        setBookLists(playlistsWithBooks);
+      } else {
+        console.error(data?.error || 'Unexpected API response');
       }
-    };
+    } catch (error) {
+      console.error('Failed to fetch playlists and reviews:', error);
+    }
+  };
 
-    fetchPlaylistsAndReviews();
-  }, []);
+  fetchPlaylistsAndReviews();
+}, []);
+
 
   const toggleList = (listId: string) => {
     setOpenLists(prev => prev.includes(listId) ? prev.filter(id => id !== listId) : [...prev, listId]);
@@ -72,7 +75,7 @@ const Page: React.FC = () => {
       const response = await axios.post('/api/playlists/create-list', {
         title: newList.title,
         description: newList.description,
-        isPrivate: newList.isPrivate,
+        isPrivate: newList.isPrivate, // Correctly reflects the Switch state
       });
   
       if (response.status === 201) {
@@ -191,9 +194,10 @@ const Page: React.FC = () => {
           </form>
         )}
 
-        <Accordion type="multiple" value={openLists} className="w-full">
-          {bookLists.map(list => (
-            <AccordionItem key={list.id} value={list.id}>
+<Accordion type="multiple" value={openLists} className="w-full">
+  {bookLists.length > 0 ? (
+    bookLists.map(list => (
+      <AccordionItem key={list.id} value={list.id}>
               <AccordionTrigger onClick={() => toggleList(list.id)} className="hover:no-underline">
                 <div className="flex items-center justify-between w-full">
                   <span className="font-semibold">{list.title}</span>
@@ -234,7 +238,11 @@ const Page: React.FC = () => {
                       <Input name="title" defaultValue={list.title} required />
                       <Textarea name="description" defaultValue={list.description} required />
                       <div className="flex items-center space-x-2">
-                        <Switch name="isPrivate" defaultChecked={list.isPrivate} />
+                      <Switch
+  id="private-mode"
+  checked={newList.isPrivate}
+  onCheckedChange={(checked) => setNewList({ ...newList, isPrivate: checked })}
+/>
                         <label htmlFor="isPrivate">Private List</label>
                       </div>
                       <Button type="submit">Save Changes</Button>
@@ -266,73 +274,46 @@ const Page: React.FC = () => {
                   )}
 
                   <Accordion type="multiple" value={openBooks} className="w-full">
-                    {list.books.map(book => (
-                      <AccordionItem key={book.id} value={book.id}>
-                        <AccordionTrigger onClick={() => toggleBook(book.id)} className="hover:no-underline">
-                          <div className="flex items-center space-x-4">
-                          <Image 
+                  {Array.isArray(list.books) && list.books.map(book => (
+  <AccordionItem key={book.id} value={book.id}>
+    <AccordionTrigger onClick={() => toggleBook(book.id)} className="hover:no-underline">
+      <div className="flex items-center space-x-4">
+        <Image 
           src={book.image || "/placeholder-user.jpg"} 
           alt={book.title} 
           width={64} 
           height={96} 
           className="object-cover"
-       
         />
-                            <div>
-                              <h3 className="font-semibold">{book.title}</h3>
-                              <div className="flex items-center">
-                                <StarIcon className="w-4 h-4 text-yellow-400 mr-1" />
-                                <span>{book.score.toFixed(1)}</span>
-                              </div>
-                              <div className="flex flex-wrap gap-2 mt-2">
-                                {book.genres.map(genre => (
-                                  <Badge key={genre} variant="outline">{genre}</Badge>
-                                ))}
-                              </div>
-                            </div>
-                          </div>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          <div className="p-4 space-y-2">
-                            {editingBook?.listId === list.id && editingBook?.bookId === book.id ? (
-                              <form onSubmit={(e) => {
-                                e.preventDefault();
-                                const formData = new FormData(e.currentTarget);
-                                handleEditBook(list.id, book.id, {
-                                  score: parseFloat(formData.get('score') as string),
-                                  notes: formData.get('notes') as string
-                                });
-                              }} className="space-y-4">
-                                <Input name="score" type="number" step="0.1" min="0" max="5" defaultValue={book.score} required />
-                                <Textarea name="notes" defaultValue={book.notes} required />
-                                <Button type="submit">Save Changes</Button>
-                              </form>
-                            ) : (
-                              <>
-                                <p>{book.notes}</p>
-                                <div className="flex items-center space-x-4 text-sm text-gray-500">
-                                  <span>Created: {formatDate(book.created_at)}</span>
-                                  <span>Updated: {formatDate(book.updated_at)}</span>
-                                </div>
-                                <div className="flex space-x-2 mt-2">
-                                  <Button variant="outline" size="sm" onClick={() => setEditingBook({ listId: list.id, bookId: book.id })}>
-                                    <EditIcon className="w-4 h-4 mr-2" /> Edit Review
-                                  </Button>
-                                  <Button variant="destructive" size="sm" onClick={() => handleDeleteBook(list.id, book.id)}>
-                                    <TrashIcon className="w-4 h-4 mr-2" /> Delete Book
-                                  </Button>
-                                </div>
-                              </>
-                            )}
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                    ))}
+        <div>
+          <h3 className="font-semibold">{book.title}</h3>
+          <div className="flex items-center">
+            <StarIcon className="w-4 h-4 text-yellow-400 mr-1" />
+            <span>{book.score.toFixed(1)}</span>
+          </div>
+          <div className="flex flex-wrap gap-2 mt-2">
+            {book.genres.map(genre => (
+              <Badge key={genre} variant="outline">{genre}</Badge>
+            ))}
+          </div>
+        </div>
+      </div>
+    </AccordionTrigger>
+    <AccordionContent>
+      <div className="p-4 space-y-2">
+        {/* Additional book content here */}
+      </div>
+    </AccordionContent>
+  </AccordionItem>
+))}
                   </Accordion>
                 </div>
               </AccordionContent>
             </AccordionItem>
-          ))}
+    ))
+  ) : (
+    <p>No book lists found</p>
+  )}
         </Accordion>
       </div>
     </AnimateWrapper>
