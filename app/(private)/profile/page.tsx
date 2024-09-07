@@ -1,39 +1,37 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import useSWR from 'swr';
 import AnimateWrapper from '@/components/AnimateWrapper';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { ThumbsUpIcon, ThumbsDownIcon, EyeIcon, UserIcon, CalendarIcon, LockIcon, StarIcon, PlusIcon, EditIcon, TrashIcon } from "lucide-react"
-import axios from '@/lib/axios';
+import { ThumbsUpIcon, ThumbsDownIcon, EyeIcon, UserIcon, CalendarIcon, LockIcon, StarIcon } from "lucide-react";
 import { format } from 'date-fns';
 import Image from 'next/image';
+
+// Fetcher function for SWR
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
 const Page: React.FC = () => {
-  const [userProfile, setUserProfile] = useState<{ username: string; avatar: string; created: number } | null>(null);
-  const [playlists, setPlaylists] = useState<any[]>([]);
-  const [reviews, setReviews] = useState<any[]>([]);
   const [openPlaylists, setOpenPlaylists] = useState<string[]>([]);
   const [openReviews, setOpenReviews] = useState<string[]>([]);
 
-  // Fetch user profile and top 5 playlists and reviews
-  useEffect(() => {
-    const fetchProfileAndData = async () => {
-      try {
-        const profileResponse = await axios.get('/api/profile-page/get-profile');
-        setUserProfile(profileResponse.data);
+  // Fetch user profile using SWR
+  const { data: userProfile, error: profileError } = useSWR('/api/profile-page/get-profile', fetcher);
 
-        const dataResponse = await axios.get('/api/profile-page/get-playlists-and-reviews');
-        const { playlists, reviews } = dataResponse.data;
-        setPlaylists(playlists);
-        setReviews(reviews);
-      } catch (error) {
-        console.error('Failed to fetch profile or data', error);
-      }
-    };
+  // Fetch playlists and reviews using SWR
+  const { data: playlistsAndReviews, error: dataError } = useSWR('/api/profile-page/get-playlists-and-reviews', fetcher);
 
-    fetchProfileAndData();
-  }, []);
+  // Handle loading and error states
+  if (profileError || dataError) {
+    return <div>Failed to load data</div>;
+  }
+
+  if (!userProfile || !playlistsAndReviews) {
+    return <div>Loading...</div>;
+  }
+
+  const { playlists, reviews } = playlistsAndReviews;
 
   const formatDate = (dateString: string | number | Date) => {
     const date = new Date(dateString);
@@ -54,13 +52,12 @@ const Page: React.FC = () => {
         {userProfile && (
           <div className="flex items-center gap-6 mb-8">
             <div className="flex-shrink-0">
-            <Image
-        src={userProfile.avatar ? userProfile.avatar : '/avatar-default.png'}
-        alt={`${userProfile.username}'s avatar`}
-        width={96}
-        height={96}
-        />
-
+              <Image
+                src={userProfile.avatar ? userProfile.avatar : '/avatar-default.png'}
+                alt={`${userProfile.username}'s avatar`}
+                width={96}
+                height={96}
+              />
             </div>
             <div className="grid gap-2">
               <h1 className="text-2xl font-bold">{userProfile.username}</h1>
@@ -106,7 +103,7 @@ const Page: React.FC = () => {
                   <div className="p-4 space-y-2">
                     <p>{playlist.description}</p>
                     <div className="flex items-center space-x-4">
-                      {playlist.isPrivate ? (
+                      {playlist.is_private ? (
                         <Badge variant="secondary">
                           <LockIcon className="w-4 h-4 mr-1 text-red-500" /> Private
                         </Badge>

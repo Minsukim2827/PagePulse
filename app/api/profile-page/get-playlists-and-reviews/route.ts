@@ -36,13 +36,11 @@ export async function GET() {
     return NextResponse.json({ error: playlistError.message }, { status: 500 });
   }
 
-  const playlistIds = playlists.map((playlist) => playlist.id);
-
-  // Fetch the top 5 most recent book reviews by date
+  // Fetch the top 5 most recent book reviews by user_id
   const { data: reviews, error: reviewError } = await supabase
     .from('reviews')
     .select('*')
-    .in('playlist_id', playlistIds)
+    .eq('user_id', existingUser.id) // Filter by user_id
     .order('created_at', { ascending: false }) // Sort by created_at in descending order
     .limit(5); // Limit to the top 5
 
