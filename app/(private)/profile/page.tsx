@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ThumbsUpIcon, ThumbsDownIcon, EyeIcon, UserIcon, CalendarIcon, LockIcon, StarIcon, PlusIcon, EditIcon, TrashIcon } from "lucide-react"
 import axios from '@/lib/axios';
 import { format } from 'date-fns';
-
+import Image from 'next/image';
 const Page: React.FC = () => {
   const [userProfile, setUserProfile] = useState<{ username: string; avatar: string; created: number } | null>(null);
   const [playlists, setPlaylists] = useState<any[]>([]);
@@ -54,11 +54,13 @@ const Page: React.FC = () => {
         {userProfile && (
           <div className="flex items-center gap-6 mb-8">
             <div className="flex-shrink-0">
-              <img
-                src={userProfile.avatar || '/default-avatar.png'}
-                alt={`${userProfile.username}'s avatar`}
-                className="w-24 h-24 rounded-full"
-              />
+            <Image
+        src={userProfile.avatar ? userProfile.avatar : '/avatar-default.png'}
+        alt={`${userProfile.username}'s avatar`}
+        width={96}
+        height={96}
+        />
+
             </div>
             <div className="grid gap-2">
               <h1 className="text-2xl font-bold">{userProfile.username}</h1>
