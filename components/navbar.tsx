@@ -54,7 +54,7 @@ const Navbar: React.FC = () => {
         </Link>
       </div>
 
-      <div className="hidden xl:flex items-center space-x-1">
+      <div className="hidden xl:flex items-center space-x-3">
         <ModeToggle />
         <SignedOut>
         </SignedOut>

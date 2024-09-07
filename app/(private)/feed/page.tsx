@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import  useSWR  from 'swr';
 import AnimateWrapper from '@/components/AnimateWrapper';
 import { Card } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -13,27 +13,12 @@ interface Post {
   created_at: string;
 }
 
+// Create a fetcher function to be used with SWR
+const fetcher = (url: string) => axios.get(url).then(res => res.data);
+
 const Page: React.FC = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchFeed = async () => {
-      try {
-        const { data } = await axios.get('/api/feed/get-feed');
-        if (data && Array.isArray(data)) {
-          setPosts(data);
-        } else {
-          setPosts([]);
-        }
-      } catch (error) {
-        setError('Error fetching feed');
-        console.error('Error fetching feed:', error);
-      }
-    };
-
-    fetchFeed();
-  }, []);
+  // Use SWR for data fetching
+  const { data: posts, error } = useSWR<Post[]>('/api/feed/get-feed', fetcher);
 
   // Function to format the time based on the conditions
   const formatTime = (created_at: string) => {
@@ -63,7 +48,9 @@ const Page: React.FC = () => {
         <main className="flex-1 bg-background">
           <div className="container mx-auto py-6 md:py-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {error ? (
-              <p>{error}</p>
+              <p>Error fetching feed</p>
+            ) : !posts ? (
+              <p>Loading...</p>
             ) : posts.length === 0 ? (
               <p>No posts available</p>
             ) : (

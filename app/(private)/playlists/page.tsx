@@ -12,6 +12,7 @@ import axios from '@/lib/axios';
 import { format} from 'date-fns';
 import Image from 'next/image';
 
+
 const Page: React.FC = () => {
   const [bookLists, setBookLists] = useState<any[]>([]);
   const [openLists, setOpenLists] = useState<string[]>([]);
@@ -75,11 +76,12 @@ useEffect(() => {
       const response = await axios.post('/api/playlists/create-list', {
         title: newList.title,
         description: newList.description,
-        isPrivate: newList.isPrivate, // Correctly reflects the Switch state
+        isPrivate: newList.isPrivate,
       });
   
       if (response.status === 201) {
         const newBookList = response.data;
+        console.log(newBookList);
         setBookLists(prev => [newBookList, ...prev]);
         setNewList({ title: '', description: '', isPrivate: false });
         setShowAddForm(false);
@@ -194,10 +196,9 @@ useEffect(() => {
           </form>
         )}
 
-<Accordion type="multiple" value={openLists} className="w-full">
-  {bookLists.length > 0 ? (
-    bookLists.map(list => (
-      <AccordionItem key={list.id} value={list.id}>
+        <Accordion type="multiple" value={openLists} className="w-full">
+          {bookLists.map(list => (
+            <AccordionItem key={list.id} value={list.id}>
               <AccordionTrigger onClick={() => toggleList(list.id)} className="hover:no-underline">
                 <div className="flex items-center justify-between w-full">
                   <span className="font-semibold">{list.title}</span>
@@ -238,11 +239,7 @@ useEffect(() => {
                       <Input name="title" defaultValue={list.title} required />
                       <Textarea name="description" defaultValue={list.description} required />
                       <div className="flex items-center space-x-2">
-                      <Switch
-  id="private-mode"
-  checked={newList.isPrivate}
-  onCheckedChange={(checked) => setNewList({ ...newList, isPrivate: checked })}
-/>
+                        <Switch name="isPrivate" defaultChecked={list.isPrivate} />
                         <label htmlFor="isPrivate">Private List</label>
                       </div>
                       <Button type="submit">Save Changes</Button>
@@ -251,7 +248,7 @@ useEffect(() => {
                     <>
                       <p>{list.description}</p>
                       <div className="flex items-center space-x-4">
-                        {list.isPrivate ? (
+                        {list.is_private ? (
                           <Badge variant="secondary">
                             <LockIcon className="w-4 h-4 mr-1 text-red-500" /> Private
                           </Badge>
@@ -301,19 +298,46 @@ useEffect(() => {
     </AccordionTrigger>
     <AccordionContent>
       <div className="p-4 space-y-2">
-        {/* Additional book content here */}
+        {editingBook?.listId === list.id && editingBook?.bookId === book.id ? (
+          <form onSubmit={(e) => {
+            e.preventDefault();
+            const formData = new FormData(e.currentTarget);
+            handleEditBook(list.id, book.id, {
+              score: parseFloat(formData.get('score') as string),
+              notes: formData.get('notes') as string
+            });
+          }} className="space-y-4">
+            <Input name="score" type="number" step="0.1" min="0" max="5" defaultValue={book.score} required />
+            <Textarea name="notes" defaultValue={book.notes} required />
+            <Button type="submit">Save Changes</Button>
+          </form>
+        ) : (
+          <>
+            <p>{book.notes}</p>
+            <div className="flex items-center space-x-4 text-sm text-gray-500">
+              <span>Created: {formatDate(book.created_at)}</span>
+              <span>Updated: {formatDate(book.updated_at)}</span>
+            </div>
+            <div className="flex space-x-2 mt-2">
+              <Button variant="outline" size="sm" onClick={() => setEditingBook({ listId: list.id, bookId: book.id })}>
+                <EditIcon className="w-4 h-4 mr-2" /> Edit Review
+              </Button>
+              <Button variant="destructive" size="sm" onClick={() => handleDeleteBook(list.id, book.id)}>
+                <TrashIcon className="w-4 h-4 mr-2" /> Delete Book
+              </Button>
+            </div>
+          </>
+        )}
       </div>
     </AccordionContent>
   </AccordionItem>
 ))}
+
                   </Accordion>
                 </div>
               </AccordionContent>
             </AccordionItem>
-    ))
-  ) : (
-    <p>No book lists found</p>
-  )}
+          ))}
         </Accordion>
       </div>
     </AnimateWrapper>
