@@ -8,10 +8,11 @@ import { ClerkProvider, SignInButton, SignedIn, SignedOut, UserButton } from '@c
 import NavButton from '@/components/ui/navButton/navButton';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from "framer-motion";
+ import { useUser } from '@clerk/nextjs';
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+ const { isSignedIn } = useUser();
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -56,13 +57,6 @@ const Navbar: React.FC = () => {
       <div className="hidden xl:flex items-center space-x-1">
         <ModeToggle />
         <SignedOut>
-          <SignInButton>
-            <Link href="/sign-in" passHref>
-            <NavButton>
-              Sign In
-            </NavButton>
-            </Link>
-          </SignInButton>
         </SignedOut>
         <SignedIn>
           <UserButton appearance={{
