@@ -276,7 +276,7 @@ const Page: React.FC = () => {
           width={64} 
           height={96} 
           className="object-cover"
-          onError={(e) => { e.currentTarget.src = placeholderImage.src }} // Fallback if the image fails to load
+       
         />
                             <div>
                               <h3 className="font-semibold">{book.title}</h3>
