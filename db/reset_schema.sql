@@ -44,7 +44,8 @@ CREATE TABLE IF NOT EXISTS playlists (
     followers VARCHAR(50)[] DEFAULT '{}',
     follower_count INTEGER GENERATED ALWAYS AS (array_length(followers, 1)) STORED,
     created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
+    updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
+    description TEXT DEFAULT NULL,
 );
 
 -- Review Table
@@ -54,7 +55,7 @@ CREATE TABLE IF NOT EXISTS reviews (
     playlist_id INTEGER NOT NULL REFERENCES playlists(id),
     image TEXT DEFAULT NULL,
     title VARCHAR(50) NOT NULL,
-    score INTEGER CHECK (score >= 1 AND score <= 5),
+    score NUMERIC(1, 1),  
     genres TEXT[] DEFAULT ARRAY['unknown'],
     page_count INTEGER DEFAULT 0,
     authors TEXT[] DEFAULT ARRAY['unknown'],

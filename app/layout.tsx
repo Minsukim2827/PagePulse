@@ -6,6 +6,7 @@ import Navbar from '@/components/navbar';
 import { ThemeProvider } from "@/components/theme-provider";
 import Footer from '@/components/footer';
 import { ClerkProvider } from '@clerk/nextjs';
+import {SWRProvider} from '@/lib/swr-provider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -15,7 +16,9 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
+    <SWRProvider>
     <ClerkProvider>
+      
       <html lang="en">
         <body className={`${inter.className} bg-gray-200 dark:bg-gradient-to-b dark:from-zinc-950 dark:to-zinc-900`}>
           <ThemeProvider defaultTheme="dark" attribute="class">
@@ -36,6 +39,7 @@ export default function RootLayout({
           </ThemeProvider>
         </body>
       </html>
-    </ClerkProvider>
+      
+    </ClerkProvider></SWRProvider>
   );
 }

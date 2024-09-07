@@ -6,7 +6,7 @@ import Link from 'next/link';
 import cardContents from './cardContents';
 import { LogIn, Github, Book } from 'lucide-react';
 import BubbleButton from '@/components/ui/bubbleButton/bubbleButton';
-
+import {BookSearch} from '@/components/book-search';
 const DashCard: React.FC = () => {
   const { isLoaded, isSignedIn, user } = useUser();
 
@@ -24,6 +24,9 @@ const DashCard: React.FC = () => {
           Built by Min
         </BubbleButton>
       </Link>
+{isSignedIn && (
+  <BookSearch />
+)}
 
       {/* Conditionally render Sign Up and Sign In buttons */}
       {!isSignedIn && (
