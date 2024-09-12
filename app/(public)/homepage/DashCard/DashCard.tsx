@@ -1,14 +1,14 @@
 "use client";
 
 import { useUser } from '@clerk/nextjs';
-import React from 'react';
 import Link from 'next/link';
-import cardContents from './cardContents';
 import { LogIn, Github, Book } from 'lucide-react';
 import BubbleButton from '@/components/ui/bubbleButton/bubbleButton';
-import {BookSearch} from '@/components/book-search';
+import { BookSearch } from '@/components/book-search';
+import cardContents from '@/lib/cardContents';
+
 const DashCard: React.FC = () => {
-  const { isLoaded, isSignedIn, user } = useUser();
+  const { isSignedIn } = useUser();
 
   return (
     <div className="border-b-2 flex flex-col justify-center items-center p-4 h-auto relative gap-2 mx-auto">
@@ -24,11 +24,9 @@ const DashCard: React.FC = () => {
           Built by Min
         </BubbleButton>
       </Link>
-{isSignedIn && (
-  <BookSearch />
-)}
+      
+      {isSignedIn && <BookSearch />}
 
-      {/* Conditionally render Sign Up and Sign In buttons */}
       {!isSignedIn && (
         <div className="flex flex-row gap-6 mb-6">
           <Link href="/sign-up" passHref>
