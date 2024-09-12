@@ -70,3 +70,18 @@
     @apply bg-background text-foreground;
   }
 }
+/* 
+.accordion-content {
+  overflow: hidden;
+  transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+.accordion-content[data-state="open"] {
+  max-height: 1000px;
+  opacity: 1;
+}
+
+.accordion-content[data-state="closed"] {
+  max-height: 0;
+  opacity: 0;
+} */

@@ -1,5 +1,6 @@
 "use client";
-import CategorySection from "./CategorySection";
+
+import CategorySection from "./CategorySection/CategorySection";
 import highlyRatedBooks2024 from "@/lib/highly-rated-books-2024";
 
 const HighlyRatedBooksGrid: React.FC = () => {

@@ -1,20 +1,21 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useState } from 'react';
+import useSWR from 'swr';
 import AnimateWrapper from '@/components/AnimateWrapper';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Switch } from "@/components/ui/switch"
-import { ThumbsUpIcon, ThumbsDownIcon, EyeIcon, UserIcon, CalendarIcon, LockIcon, StarIcon, PlusIcon, EditIcon, TrashIcon } from "lucide-react"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import { ThumbsUpIcon, ThumbsDownIcon, EyeIcon, UserIcon, CalendarIcon, LockIcon, StarIcon, PlusIcon, EditIcon, TrashIcon } from "lucide-react";
 import axios from '@/lib/axios';
-import { format} from 'date-fns';
+import { format } from 'date-fns';
 import Image from 'next/image';
 
+const fetcher = (url: string) => axios.get(url).then(res => res.data);
 
 const Page: React.FC = () => {
-  const [bookLists, setBookLists] = useState<any[]>([]);
   const [openLists, setOpenLists] = useState<string[]>([]);
   const [openBooks, setOpenBooks] = useState<string[]>([]);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -26,48 +27,32 @@ const Page: React.FC = () => {
   const [editingList, setEditingList] = useState<string | null>(null);
   const [editingBook, setEditingBook] = useState<{ listId: string, bookId: string } | null>(null);
 
-  const formatDate = (dateString) => {
+  const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return format(date, 'dd MM yyyy');
   };
 
-useEffect(() => {
-  const fetchPlaylistsAndReviews = async () => {
-    try {
-      const response = await axios.get('/api/playlists/get-playlists');
-      const data = response.data;
+  const { data, error, isLoading, mutate } = useSWR('/api/playlists/get-playlists', fetcher);
 
-      if (response.status === 200 && data) {
-        const playlists = data.playlists || [];
-        const reviews = data.reviews || [];
+  if (error) return <div>Failed to load playlists</div>;
+  if (isLoading) return <div>Loading...</div>;
 
-        // Combine playlists and their corresponding reviews
-        const playlistsWithBooks = playlists.map((playlist: any) => ({
-          ...playlist,
-          books: reviews.filter((review: any) => review.playlist_id === playlist.id) || [],
-        }));
+  const playlists = data?.playlists || [];
+  const reviews = data?.reviews || [];
 
-        console.log(playlistsWithBooks);
-        setBookLists(playlistsWithBooks);
-      } else {
-        console.error(data?.error || 'Unexpected API response');
-      }
-    } catch (error) {
-      console.error('Failed to fetch playlists and reviews:', error);
-    }
-  };
-
-  fetchPlaylistsAndReviews();
-}, []);
-
+  // Combine playlists and their corresponding reviews
+  const bookLists = playlists.map((playlist: any) => ({
+    ...playlist,
+    books: reviews.filter((review: any) => review.playlist_id === playlist.id) || [],
+  }));
 
   const toggleList = (listId: string) => {
     setOpenLists(prev => prev.includes(listId) ? prev.filter(id => id !== listId) : [...prev, listId]);
-  }
+  };
 
   const toggleBook = (bookId: string) => {
     setOpenBooks(prev => prev.includes(bookId) ? prev.filter(id => id !== bookId) : [...prev, bookId]);
-  }
+  };
 
   const handleAddList = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -81,8 +66,7 @@ useEffect(() => {
   
       if (response.status === 201) {
         const newBookList = response.data;
-        console.log(newBookList);
-        setBookLists(prev => [newBookList, ...prev]);
+        mutate(); // Revalidate data
         setNewList({ title: '', description: '', isPrivate: false });
         setShowAddForm(false);
       }
@@ -90,74 +74,52 @@ useEffect(() => {
       console.error('Failed to add book list:', error);
     }
   };
-  
 
   const handleEditList = async (listId: string, updatedList: Partial<typeof bookLists[0]>) => {
     try {
       const response = await axios.put(`/api/playlists/edit-list/${listId}`, updatedList);
   
       if (response.status === 200) {
-        const updatedBookList = response.data;
-        setBookLists(prev => prev.map(list => {
-          if (list.id === listId) {
-            return { ...list, ...updatedBookList };  // Merges the updated list properties with existing properties
-          }
-          return list;
-        }));
+        mutate(); // Revalidate data
         setEditingList(null);
       }
     } catch (error) {
       console.error('Failed to update book list:', error);
     }
   };
-  
 
   const handleDeleteList = async (listId: string) => {
     try {
       await axios.delete(`/api/playlists/delete-list/${listId}`);
-      setBookLists(prev => prev.filter(list => list.id !== listId));
+      mutate(); // Revalidate data
     } catch (error) {
       console.error('Failed to delete book list:', error);
     }
   };
-  
 
   const handleEditBook = async (listId: string, bookId: string, updatedBook: Partial<typeof bookLists[0]['books'][0]>) => {
     try {
       const response = await axios.put(`/api/playlists/edit-book/${bookId}`, updatedBook);
   
       if (response.status === 200) {
-        const updatedReview = response.data;
-        setBookLists(prev => prev.map(list =>
-          list.id === listId ? {
-            ...list,
-            books: list.books.map(book => book.id === bookId ? updatedReview : book)
-          } : list
-        ));
+        mutate(); // Revalidate data
         setEditingBook(null);
       }
     } catch (error) {
       console.error('Failed to update book review:', error);
     }
   };
-  
 
   const handleDeleteBook = async (listId: string, bookId: string) => {
     try {
       const response = await axios.delete(`/api/playlists/delete-book/${bookId}`);
       if (response.status === 200) {
-        setBookLists(prev => prev.map(list =>
-          list.id === listId ? {
-            ...list,
-            books: list.books.filter(book => book.id !== bookId)
-          } : list
-        ));
+        mutate(); // Revalidate data
       }
     } catch (error) {
       console.error('Failed to delete book review:', error);
     }
   };
-  
   
 
   return (
