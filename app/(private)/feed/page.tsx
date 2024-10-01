@@ -1,22 +1,17 @@
-"use client";
-
-import { useState, useEffect } from 'react';
-import useSWR from 'swr';
+"use client"
+import React, { useState, useEffect } from 'react';
 import AnimateWrapper from '@/components/AnimateWrapper';
-import { Card } from '@/components/ui/card';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import axios from '@/lib/axios';
-import { Post } from '@/app/types/post';
-import { formatTime } from '@/app/utils/dateFormatters';
 import PostCard from '@/app/(private)/feed/PostCard';
 import ErrorMessage from '@/components/ui/ErrorMessage';
 import LoadingCircle from '@/components/ui/loadingCircle/loadingCircle';
-
-const fetcher = (url: string) => axios.get(url).then(res => res.data);
+import AddFeedForm from '@/app/(private)/feed/AddFeedForm';
+import useCurrentUserId from '@/app/hooks/useCurrentUserId';
+import usePosts from '@/app/hooks/usePosts';
 
 const FeedPage: React.FC = () => {
-  const { data: posts, error } = useSWR<Post[]>('/api/feed/get-feed', fetcher);
+  const { posts, error, mutate, handleDeletePost } = usePosts();
   const [isLoading, setIsLoading] = useState(true);
+  const currentUserId = useCurrentUserId();
 
   useEffect(() => {
     if (posts || error) {
@@ -29,14 +24,22 @@ const FeedPage: React.FC = () => {
     if (isLoading) return <LoadingCircle />;
     if (!posts || posts.length === 0) return <ErrorMessage message="No posts available" />;
 
-    return posts.map((post) => <PostCard key={post.id} post={post} />);
+    return posts.map((post) => (
+      <PostCard
+        key={post.id}
+        post={post}
+        currentUserId={currentUserId}
+        onDelete={handleDeletePost}
+      />
+    ));
   };
 
   return (
     <AnimateWrapper>
-      <div className="flex flex-col min-h-screen ">
-        <main className="flex-1 ">
-          <div className="container mx-auto py-6 md:py-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ">
+      <div className="flex flex-col min-h-screen items-center">
+        <main className="flex-1 w-full max-w-p13 px-4">
+          <div className="flex flex-col space-y-6 py-6 items-center">
+            <AddFeedForm onPostCreated={mutate} />
             {renderContent()}
           </div>
         </main>
